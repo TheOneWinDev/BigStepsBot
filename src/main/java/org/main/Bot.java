@@ -15,13 +15,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Bot extends TelegramLongPollingBot {
-    // JDBC URL, username, and password of MySQL server
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/tgWhitelist";
     private static final String JDBC_USER = "USER";
     private static final String JDBC_PASSWORD = "PSWD";
 
     public Bot() {
-        // Initialize database connection and create the whitelist table if not exists
         initializeDatabase();
     }
 
@@ -42,13 +40,10 @@ public class Bot extends TelegramLongPollingBot {
             String text = message.getText();
 
             if ("/start".equals(text)) {
-                // Пользователь начал диалог, можем отправить приветственное сообщение
                 sendStartMessage(message.getChatId());
             } else if ("/weather".equals(text.toLowerCase())) {
-                // Пользователь запросил погоду
                 sendWeatherMessage(message.getChatId());
             } else if (isUserInWhitelist(userId)) {
-                // Пользователь в whitelist, поэтому отправляем ответ
                 String response = "Привет, " + message.getFrom().getFirstName() + "! Это ответ бота.";
                 SendMessage sendMessage = new SendMessage(message.getChatId().toString(), response);
 
@@ -58,14 +53,12 @@ public class Bot extends TelegramLongPollingBot {
                     e.printStackTrace();
                 }
             } else {
-                // Пользователь не в whitelist, поэтому игнорируем сообщение
                 System.out.println("Пользователь не в whitelist: " + userId);
             }
         }
     }
 
     private void sendStartMessage(Long chatId) {
-        // Отправляем приветственное сообщение
         String response = "Привет! Я бот. Чтобы узнать погоду, напиши /weather.";
         SendMessage sendMessage = new SendMessage(chatId.toString(), response);
 
@@ -77,13 +70,10 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     private void sendWeatherMessage(Long chatId) {
-        // Получаем данные о погоде
         String weatherData = Weather.formattedWeatherData();
 
-        // Формируем полный ответ о погоде
         String response = "Вот текущая погода:\n" + weatherData;
 
-        // Отправляем сообщение с полной информацией о погоде
         SendMessage sendMessage = new SendMessage(chatId.toString(), response);
 
         try {
@@ -108,13 +98,11 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        // Верните имя вашего бота
         return "YourBotName";
     }
 
     @Override
     public String getBotToken() {
-        // Верните токен вашего бота
         return "TOKEN";
     }
 }
