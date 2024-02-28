@@ -1,8 +1,6 @@
-//version 0.0.3
-
 package org.main;
 
-import org.telegram.telegrambots.bots.TelegramLongPollingBot; // Use TelegramLongPollingBot as base class
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -19,8 +17,8 @@ import java.util.List;
 
 public class Bot extends TelegramLongPollingBot {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/tgWhitelist";
-    private static final String JDBC_USER = "1111";
-    private static final String JDBC_PASSWORD = "1111";
+    private static final String JDBC_USER = "windev";
+    private static final String JDBC_PASSWORD = "1234";
 
     public Bot() {
         initializeDatabase();
@@ -32,64 +30,6 @@ public class Bot extends TelegramLongPollingBot {
             connection.prepareStatement(createTableSQL).execute();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    private static final Long ChatId = 1111L;
-
-    // Change from Long to long
-    private void forwardPinnedPost(long userId) throws TelegramApiException {
-        try {
-            // Получить информацию о чате
-            GetChat getChat = new GetChat();
-            getChat.setChatId(String.valueOf(ChatId)); // Предполагая, что ChatId - это переменная класса
-            Chat chat = execute(getChat);
-
-            // Проверить, есть ли в чате закрепленное сообщение
-            if (chat != null && chat.getPinnedMessage() != null) {
-                Message pinnedMessage = chat.getPinnedMessage();
-
-                if (pinnedMessage != null) {
-                    // Обрабатываем фото
-                    if (pinnedMessage.hasPhoto()) {
-                        PhotoSize bestPhoto = pinnedMessage.getPhoto().stream()
-                                .sorted(Comparator.comparing(PhotoSize::getFileSize).reversed())
-                                .findFirst().orElse(null);
-
-                        if (bestPhoto != null) {
-                            String fileId = bestPhoto.getFileId();
-                            SendPhoto photo = new SendPhoto();
-                            photo.setChatId(String.valueOf(userId));
-
-                            // Create an InputFile object from the fileId
-                            photo.setPhoto(new InputFile(fileId));
-
-                            photo.setCaption(pinnedMessage.getCaption());
-                            execute(photo);
-                        } else {
-                            // Не удалось получить фото
-                            System.out.println("[ID " + userId + "] Не удалось получить фото из закреплённого сообщения.");
-                        }
-                    } else {
-                        // Обрабатываем другие типы сообщений
-                        String text = pinnedMessage.getText();
-                        execute(new SendMessage(String.valueOf(userId), text));
-                    }
-
-                    // Отправляем сообщение об успехе
-                    System.out.println("[ID " + userId + "] Закреплённое сообщение отправлено в личные сообщения.");
-                } else {
-                    // Не удалось получить информацию о закрепленном сообщении
-                    System.out.println("[ID " + userId + "] Не удалось получить информацию о закреплённом сообщении.");
-                }
-            } else {
-                // В чате нет закрепленного сообщения
-                System.out.println("[ID " + userId + "] Не удалось получить фото из закреплённого сообщения.");
-            }
-        } catch (TelegramApiException e) {
-            // Обработка исключения Telegram API
-            e.printStackTrace();
-            System.out.println("[ID " + userId + "] Ошибка при пересылке закреплённого сообщения.");
         }
     }
 
@@ -106,10 +46,11 @@ public class Bot extends TelegramLongPollingBot {
             } else if ("/weather".equals(text.toLowerCase())) {
                 sendWeatherMessage(message.getChatId());
             } else if ("/lastpost".equals(text.toLowerCase())) {
+                Forwarder forwarder = new Forwarder();
                 try {
-                    forwardPinnedPost(userId);
+                    forwarder.forwardPinnedPost(userId);
                 } catch (TelegramApiException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             } else if (isUserInWhitelist(userId)) {
                 String response = "Привет, " + message.getFrom().getFirstName() + "! Это ответ бота.";
@@ -125,6 +66,7 @@ public class Bot extends TelegramLongPollingBot {
             }
         }
     }
+
     private void sendStartMessage(Long chatId) {
         String response = "Привет! Я бот. Чтобы узнать погоду, напиши /weather.";
         SendMessage sendMessage = new SendMessage(chatId.toString(), response);
@@ -170,6 +112,6 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "6749548121:AAHPCWV8iYvMwt3zsdUV2HzjMu2WRiZHmlA";
+        return "6749548121:AAEhAB1UM7Pkd7lmFwg2_hcZ1nQ4qDzTvtE";
     }
 }
