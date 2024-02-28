@@ -1,8 +1,6 @@
 package org.main;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.*;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -12,8 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.List;
+
 
 public class Bot extends TelegramLongPollingBot {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/tgWhitelist";
@@ -112,6 +109,6 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "6749548121:AAEhAB1UM7Pkd7lmFwg2_hcZ1nQ4qDzTvtE";
+        return "6749548121:AAEhAB1UM7Pkd7lmFwg2";
     }
 }
