@@ -65,7 +65,7 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     private void sendStartMessage(Long chatId) {
-        String response = "Привет! Я бот. Чтобы узнать погоду, напиши /weather.";
+        String response = "Привет! Я бот BigSteps, изучи мои команды";
         SendMessage sendMessage = new SendMessage(chatId.toString(), response);
 
         try {
@@ -78,7 +78,7 @@ public class Bot extends TelegramLongPollingBot {
     private void sendWeatherMessage(Long chatId) {
         String weatherData = Weather.formattedWeatherData();
 
-        String response = "Вот текущая погода:\n" + weatherData;
+        String response = "Текущая погода в Воронеже:\n" + weatherData;
 
         SendMessage sendMessage = new SendMessage(chatId.toString(), response);
 
