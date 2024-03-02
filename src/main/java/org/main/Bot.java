@@ -1,5 +1,6 @@
 package org.main;
 
+import org.apache.http.client.HttpClient;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.*;
@@ -22,8 +23,14 @@ public class Bot extends TelegramLongPollingBot {
     private static final String JDBC_USER = "windev";
     private static final String JDBC_PASSWORD = "1234";
 
+    private static Bot instance;
+
     public Bot() {
         initializeDatabase();
+    }
+
+    public static Bot getInstance() {
+        return instance;
     }
 
     private void initializeDatabase() {
@@ -31,29 +38,6 @@ public class Bot extends TelegramLongPollingBot {
             String createTableSQL = "CREATE TABLE IF NOT EXISTS whitelist (user_id BIGINT PRIMARY KEY)";
             connection.prepareStatement(createTableSQL).execute();
         } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void sendMenuMessage(Long chatId) {
-        ReplyKeyboardMarkup replyMarkup = new ReplyKeyboardMarkup();
-        replyMarkup.setResizeKeyboard(true);
-        replyMarkup.setSelective(true);
-
-        List<KeyboardRow> keyboard = new ArrayList<>();
-        KeyboardRow row1 = new KeyboardRow();
-        row1.add(new KeyboardButton("/weather"));
-        row1.add(new KeyboardButton("/lastpost"));
-        keyboard.add(row1);
-
-        replyMarkup.setKeyboard(keyboard);
-
-        SendMessage sendMessage = new SendMessage(chatId.toString(), "Выберите действие:");
-        sendMessage.setReplyMarkup(replyMarkup);
-
-        try {
-            execute(sendMessage);
-        } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
@@ -83,7 +67,7 @@ public class Bot extends TelegramLongPollingBot {
                     e.printStackTrace();
                 }
             } else if ("/menu".equals(text.toLowerCase())) {
-                sendMenuMessage(message.getChatId());
+                Menu.sendMenuMessage(message.getChatId());
             } else {
                 String response = "Привет, " + message.getFrom().getFirstName() + "! Это ответ бота.";
                 SendMessage sendMessage = new SendMessage(message.getChatId().toString(), response);
@@ -143,6 +127,6 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "67495DzTvtE";
+        return "674954Fwg2_hcZ1nQ4qDzTvtE";
     }
 }
