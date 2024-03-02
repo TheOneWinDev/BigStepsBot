@@ -12,7 +12,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class Weather {
-    private static final String API_KEY = "93b1b889128165a";
+    private static final String API_KEY = "93b1b8-95de9128165a";
     private static final String API_URL = "https://api.weather.yandex.ru/v2/informers?lat=51.670833&lon=39.180556";
 
     private static final HttpClient client = HttpClient.newHttpClient();
