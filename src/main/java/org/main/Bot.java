@@ -38,6 +38,11 @@ public class Bot extends TelegramLongPollingBot {
             Long userId = message.getFrom().getId();
             String text = message.getText();
 
+            if (!isUserInWhitelist(userId)) {
+                System.out.println("Пользователь не в whitelist: " + userId);
+                return;
+            }
+
             if ("/start".equals(text)) {
                 sendStartMessage(message.getChatId());
             } else if ("/weather".equals(text.toLowerCase())) {
@@ -49,7 +54,7 @@ public class Bot extends TelegramLongPollingBot {
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
-            } else if (isUserInWhitelist(userId)) {
+            } else {
                 String response = "Привет, " + message.getFrom().getFirstName() + "! Это ответ бота.";
                 SendMessage sendMessage = new SendMessage(message.getChatId().toString(), response);
 
@@ -58,8 +63,6 @@ public class Bot extends TelegramLongPollingBot {
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
-            } else {
-                System.out.println("Пользователь не в whitelist: " + userId);
             }
         }
     }
@@ -109,6 +112,6 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "6749548121:AAEhAB1UM7Pkd7lmFwg2";
+        return "6749qDzTvtE";
     }
 }
