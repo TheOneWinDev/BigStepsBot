@@ -1,4 +1,4 @@
-//version 0.0.4
+//version 0.0.4.5
 
 package org.main;
 
@@ -12,15 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Menu {
+
     public static void sendMenuMessage(Long chatId) {
         ReplyKeyboardMarkup replyMarkup = new ReplyKeyboardMarkup();
         replyMarkup.setResizeKeyboard(true);
         replyMarkup.setSelective(true);
-
         List<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow row1 = new KeyboardRow();
         row1.add(new KeyboardButton("/weather"));
         row1.add(new KeyboardButton("/lastpost"));
+        row1.add(new KeyboardButton("/currency"));
         keyboard.add(row1);
 
         replyMarkup.setKeyboard(keyboard);
@@ -34,4 +35,5 @@ public class Menu {
             e.printStackTrace();
         }
     }
+
 }

@@ -1,4 +1,4 @@
-//version 0.0.4
+//version 0.0.4.5
 
 package org.main;
 
@@ -13,7 +13,7 @@ import java.util.Comparator;
 
 public class Forwarder extends TelegramLongPollingBot {
 
-    private static final Long ChatId = -1002997L;
+    private static final Long ChatId = -100997L;
 
     public void forwardPinnedPost(long userId) throws TelegramApiException {
         try {
@@ -68,6 +68,6 @@ public class Forwarder extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "67495wg2_hcZ1nQ4qDzTvtE";
+        return "6749qDzTvtE";
     }
 }

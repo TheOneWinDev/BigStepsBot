@@ -1,24 +1,14 @@
-//version 0.0.4
+//version 0.0.4.5
 
 package org.main;
 
-import org.apache.http.client.HttpClient;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.*;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.sql.*;
 
 public class Bot extends TelegramLongPollingBot {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/tgWhitelist";
@@ -28,6 +18,7 @@ public class Bot extends TelegramLongPollingBot {
     private static Bot instance;
 
     public Bot() {
+        instance = this;
         initializeDatabase();
     }
 
@@ -44,7 +35,6 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
@@ -53,7 +43,7 @@ public class Bot extends TelegramLongPollingBot {
             String text = message.getText();
 
             if (!isUserInWhitelist(userId)) {
-                System.out.println("Пользователь не в whitelist: " + userId);
+                System.out.println("User not in whitelist: " + userId);
                 return;
             }
 
@@ -70,8 +60,17 @@ public class Bot extends TelegramLongPollingBot {
                 }
             } else if ("/menu".equals(text.toLowerCase())) {
                 Menu.sendMenuMessage(message.getChatId());
+            } else if ("/currency".equals(text.toLowerCase())) {
+                String currencyRates = Currency.getCurrencyRates();
+                SendMessage sendMessage = new SendMessage(message.getChatId().toString(), currencyRates);
+
+                try {
+                    execute(sendMessage);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
             } else {
-                String response = "Привет, " + message.getFrom().getFirstName() + "! Это ответ бота.";
+                String response = "Hello, " + message.getFrom().getFirstName() + "! This is a bot response.";
                 SendMessage sendMessage = new SendMessage(message.getChatId().toString(), response);
 
                 try {
@@ -83,9 +82,8 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-
     private void sendStartMessage(Long chatId) {
-        String response = "Привет! Я бот BigSteps, изучи мои команды";
+        String response = "Hello! I'm the BigSteps bot, explore my commands.";
         SendMessage sendMessage = new SendMessage(chatId.toString(), response);
 
         try {
@@ -98,7 +96,7 @@ public class Bot extends TelegramLongPollingBot {
     private void sendWeatherMessage(Long chatId) {
         String weatherData = Weather.formattedWeatherData();
 
-        String response = "Текущая погода в Воронеже:\n" + weatherData;
+        String response = "Current weather in Voronezh:\n" + weatherData;
 
         SendMessage sendMessage = new SendMessage(chatId.toString(), response);
 
@@ -129,6 +127,6 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "674954Fwg2_hcZ1nQ4qDzTvtE";
+        return "6749qDzTvtE";
     }
 }
