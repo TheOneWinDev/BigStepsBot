@@ -1,5 +1,3 @@
-//version 0.0.4.5
-
 package org.main;
 
 import com.google.gson.JsonElement;
@@ -16,7 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Currency {
-    private static final String API_KEY = "a3de802";
+    private static final String API_KEY = Config.getExchangeRateApiKey();
+
     public static String getCurrencyRates() {
         try {
             String apiUrl = "https://v6.exchangerate-api.com/v6/" + API_KEY + "/latest/RUB";

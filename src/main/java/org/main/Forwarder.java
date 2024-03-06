@@ -1,11 +1,9 @@
-//version 0.0.4.5
-
 package org.main;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.*;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -13,12 +11,16 @@ import java.util.Comparator;
 
 public class Forwarder extends TelegramLongPollingBot {
 
-    private static final Long ChatId = -100997L;
+    private final Long chatId;
+
+    public Forwarder() {
+        chatId = Config.getForwardChatId();
+    }
 
     public void forwardPinnedPost(long userId) throws TelegramApiException {
         try {
             GetChat getChat = new GetChat();
-            getChat.setChatId(String.valueOf(ChatId));
+            getChat.setChatId(String.valueOf(chatId));
             Chat chat = execute(getChat);
 
             if (chat != null && chat.getPinnedMessage() != null) {
@@ -68,6 +70,6 @@ public class Forwarder extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "6749qDzTvtE";
+        return Config.getBotToken();
     }
 }

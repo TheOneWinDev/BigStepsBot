@@ -1,5 +1,3 @@
-//version 0.0.4.5
-
 package org.main;
 
 import com.google.gson.Gson;
@@ -12,10 +10,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class Weather {
-    private static final String API_KEY = "93b165a";
+    private static final String API_KEY = Config.getYandexWeatherApiKey();
     private static final String API_URL = "https://api.weather.yandex.ru/v2/informers?lat=51.670833&lon=39.180556";
 
     private static final HttpClient client = HttpClient.newHttpClient();
+
     private static String getWeatherData() {
         try {
             HttpRequest request = HttpRequest.newBuilder()

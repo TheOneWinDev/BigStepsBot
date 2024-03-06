@@ -1,5 +1,3 @@
-//version 0.0.4.5
-
 package org.main;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -11,9 +9,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.sql.*;
 
 public class Bot extends TelegramLongPollingBot {
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/tgWhitelist";
-    private static final String JDBC_USER = "windev";
-    private static final String JDBC_PASSWORD = "1234";
+    private static final String JDBC_URL = Config.getJdbcUrl();
+    private static final String JDBC_USER = Config.getJdbcUser();
+    private static final String JDBC_PASSWORD = Config.getJdbcPassword();
 
     private static Bot instance;
 
@@ -127,6 +125,6 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "6749qDzTvtE";
+        return Config.getBotToken();
     }
 }
