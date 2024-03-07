@@ -1,5 +1,3 @@
-//version 0.0.5
-
 package org.main;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -69,18 +67,27 @@ public class Bot extends TelegramLongPollingBot {
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
+            } else if ("/contact".equals(text.toLowerCase())) {
+                ContactHandler.handleContact(message);
+            } else if (ContactHandler.isUserContacting(userId)) {
+                ContactHandler.processContactMessage(message);
             } else {
-                String response = "Hello, " + message.getFrom().getFirstName() + "! This is a bot response.";
-                SendMessage sendMessage = new SendMessage(message.getChatId().toString(), response);
-
-                try {
-                    execute(sendMessage);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
+                sendUnrecognizedCommandMessage(message.getChatId());
             }
         }
     }
+
+    private void sendUnrecognizedCommandMessage(Long chatId) {
+        String response = "Я вас не понимаю. Посмотрите список доступных команд с помощью /menu";
+        SendMessage sendMessage = new SendMessage(chatId.toString(), response);
+
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void sendStartMessage(Long chatId) {
         String response = "Hello! I'm the BigSteps bot, explore my commands.";

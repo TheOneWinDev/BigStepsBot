@@ -18,11 +18,16 @@ public class Menu {
         replyMarkup.setResizeKeyboard(true);
         replyMarkup.setSelective(true);
         List<KeyboardRow> keyboard = new ArrayList<>();
+
         KeyboardRow row1 = new KeyboardRow();
         row1.add(new KeyboardButton("/weather"));
         row1.add(new KeyboardButton("/lastpost"));
         row1.add(new KeyboardButton("/currency"));
         keyboard.add(row1);
+
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add(new KeyboardButton("/contact"));
+        keyboard.add(row2);
 
         replyMarkup.setKeyboard(keyboard);
 
@@ -35,5 +40,6 @@ public class Menu {
             e.printStackTrace();
         }
     }
+
 
 }

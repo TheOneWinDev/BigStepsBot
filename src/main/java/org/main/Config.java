@@ -1,5 +1,3 @@
-//version 0.0.5
-
 package org.main;
 
 import java.io.FileInputStream;
@@ -46,5 +44,9 @@ public class Config {
 
     public static Long getForwardChatId() {
         return Long.parseLong(properties.getProperty("FORWARD_CHAT_ID"));
+    }
+
+    public static String getAdminId() {
+        return properties.getProperty("ADMIN_TELEGRAM_ID");
     }
 }
