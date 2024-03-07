@@ -1,4 +1,4 @@
-//version 0.0.6
+//version 0.0.6.5
 
 package org.main;
 
@@ -39,7 +39,7 @@ public class ContactHandler {
 
         if ("отменить".equalsIgnoreCase(text)) {
             sendCancelledMessage(chatId);
-            isContacting = false; // Set isContacting to false only when cancellation message is sent
+            isContacting = false;
             return;
         }
 
