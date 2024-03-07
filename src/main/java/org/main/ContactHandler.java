@@ -39,26 +39,34 @@ public class ContactHandler {
 
         if ("отменить".equalsIgnoreCase(text)) {
             sendCancelledMessage(chatId);
+            isContacting = false; // Set isContacting to false only when cancellation message is sent
             return;
         }
 
         Long adminId = Long.valueOf(Config.getAdminId());
         forwardMessageToAdmin(message, chatId, adminId);
-        isContacting = false;
     }
+
 
     private static void forwardMessageToAdmin(Message message, Long chatId, Long adminId) {
         SendMessage forwardMessage = new SendMessage();
         forwardMessage.setChatId(adminId);
-        forwardMessage.setText("Новое сообщение от пользователя с ID " + chatId + ":\n" + message.getText());
+
+        String username = message.getFrom().getUserName();
+        String userId = message.getFrom().getId().toString();
+
+        String userIdentifier = username != null ? "@" + username + " (ID: " + userId + ")" : "User ID: " + userId;
+
+        forwardMessage.setText("New message from " + userIdentifier + ":\n" + message.getText());
 
         try {
             Bot.getInstance().execute(forwardMessage);
-            sendSuccessMessage(chatId);
+            sendSuccessMessage(message.getChatId());
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
+
 
     private static void sendCancelledMessage(Long chatId) {
         String response = "Отправка отменена.";
