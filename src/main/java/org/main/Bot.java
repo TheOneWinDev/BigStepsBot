@@ -35,50 +35,47 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
+    @Override
     public void onUpdateReceived(Update update) {
-        if (!update.hasMessage() || !update.getMessage().hasText()) {
-            return; // Handle only text messages
-        }
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            Message message = update.getMessage();
+            Long userId = message.getFrom().getId();
+            String text = message.getText();
 
-        Message message = update.getMessage();
-        Long userId = message.getFrom().getId();
-        String text = message.getText().toLowerCase(); // Handle commands case-insensitively
+            if (!isUserInWhitelist(userId)) {
+                System.out.println("User not in whitelist: " + userId);
+                return;
+            }
 
-        if (!isUserInWhitelist(userId)) {
-            System.out.println("User not in whitelist: " + userId);
-            return;
-        }
-
-        switch (text) {
-            case "/start":
+            if ("/start".equals(text)) {
                 sendStartMessage(message.getChatId());
-                break;
-            case "/weather":
+            } else if ("/weather".equals(text.toLowerCase())) {
                 sendWeatherMessage(message.getChatId());
-                break;
-            case "/lastpost":
+            } else if ("/lastpost".equals(text.toLowerCase())) {
+                Forwarder forwarder = new Forwarder();
                 try {
-                    new Forwarder().forwardPinnedPost(userId);
+                    forwarder.forwardPinnedPost(userId);
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
-                break;
-            case "/menu":
+            } else if ("/menu".equals(text.toLowerCase())) {
                 Menu.sendMenuMessage(message.getChatId());
-                break;
-            case "/currency":
-                SendMessage sendMessage = new SendMessage(message.getChatId().toString(), Currency.getCurrencyRates());
+            } else if ("/currency".equals(text.toLowerCase())) {
+                String currencyRates = Currency.getCurrencyRates();
+                SendMessage sendMessage = new SendMessage(message.getChatId().toString(), currencyRates);
+
                 try {
                     execute(sendMessage);
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
-                break;
-            case "/contact":
+            } else if ("/contact".equals(text.toLowerCase())) {
                 ContactHandler.handleContact(message);
-                break;
-            default:
+            } else if (ContactHandler.isUserContacting(userId)) {
+                ContactHandler.processContactMessage(message);
+            } else {
                 sendUnrecognizedCommandMessage(message.getChatId());
+            }
         }
     }
 
